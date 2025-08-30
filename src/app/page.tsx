@@ -36,12 +36,12 @@ export default function Home() {
   ];
   return (
     <div className=" flex flex-col h-[100vh] overflow-x-hidden sm:overflow-hidden bg-gray-50">
-      <div className="w-full">
+      <div className="w-full  border-b-[1px] mb-[48px]">
         <Navbar />
       </div>
-      <div className="hidden relative overflow-hidden h-full sm:flex items-start w-full px-8 py-8 max-w-[1440px] mx-auto">
+      <div className="hidden relative overflow-hidden h-full sm:flex items-start w-full px-8 py-0 max-w-[1440px] mx-auto">
         {/* Background - ParallaxScroll component */}
-        <div className="absolute h-[40rem] min-w-[1120px] max-w-[1120px] left-[20%] inset-0 z-0 rounded-xl overflow-hidden border border-transparent">
+        <div className="absolute h-[35rem] min-w-[1120px] max-w-[1120px] left-[20%] inset-0 z-0 rounded-xl overflow-hidden border border-transparent">
           <div>
             <ParallaxScroll images={images} />
           </div>

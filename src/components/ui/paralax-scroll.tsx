@@ -28,6 +28,15 @@ function ratingFor(i: number) {
   return vals[i % vals.length].toFixed(1);
 }
 
+function gradientFor(i: number) {
+  // Alternate between two different gradients
+  const gradients = [
+    "bg-gradient-to-r from-pink-500 to-violet-600",
+    "bg-gradient-to-r from-[#00B5F1] via-[#00AEEF] to-[#0066B3]"
+  ];
+  return gradients[i % gradients.length];
+}
+
 export const ParallaxScroll = ({
   images,
   className,
@@ -67,9 +76,10 @@ export const ParallaxScroll = ({
         </h3>
 
         <div
-          className="inline-flex items-center rounded-full
-  bg-gradient-to-r from-pink-500 to-violet-600
-  px-3 py-1 text-white shadow/20 ring-1 ring-white/20"
+          className={cn(
+            "inline-flex items-center rounded-full px-3 py-1 text-white shadow/20 ring-1 ring-white/20",
+            gradientFor(i)
+          )}
         >
           <span className="text-xs font-semibold">{hoursFor(i)} Hour Trip</span>
 
@@ -95,40 +105,40 @@ export const ParallaxScroll = ({
   return (
     <div className={cn("relative w-full  overflow-hidden", className)}>
       <div className="flex  gap-3 max-w-6xl mx-auto -my-24">
-        <div className="grid gap-3 w-[25%] pt-0 ">
+        {/* Column 1 - starts at normal position */}
+        <div className="grid gap-3 w-[25%] pt-0">
           {col1.map((src, i) => (
             <Card key={`c1-${i}`} src={src} i={i} />
           ))}
         </div>
 
-        <div className="grid gap-3 pt-18 w-[25%]">
+        {/* Column 2 - starts offset by half a card height to create brick pattern */}
+        <div className="grid gap-3 w-[25%] transform -translate-y-42">
           {col2.map((src, i) => (
             <Card key={`c2-${i}`} src={src} i={i + col1.length} />
           ))}
         </div>
 
-        <div className="-mt-[45%] w-[25%]">
-          <div className="grid gap-3 pt-24 pb-24 ">
-            {col3.map((src, i) => (
-              <Card
-                key={`c3-${i}`}
-                src={src}
-                i={i + col1.length + col2.length}
-              />
-            ))}
-          </div>
+        {/* Column 3 - starts at normal position (aligned with column 1) */}
+        <div className="grid gap-3 w-[25%] pt-0">
+          {col3.map((src, i) => (
+            <Card
+              key={`c3-${i}`}
+              src={src}
+              i={i + col1.length + col2.length}
+            />
+          ))}
         </div>
 
-        <div className="-mt-[80%] w-[25%]">
-          <div className="grid gap-3 pt-24 pb-24">
-            {col4.map((src, i) => (
-              <Card
-                key={`c3-${i}`}
-                src={src}
-                i={i + col1.length + col2.length}
-              />
-            ))}
-          </div>
+        {/* Column 4 - starts offset by half a card height (aligned with column 2) */}
+        <div className="grid gap-3 w-[25%] transform -translate-y-42">
+          {col4.map((src, i) => (
+            <Card
+              key={`c4-${i}`}
+              src={src}
+              i={i + col1.length + col2.length + col3.length}
+            />
+          ))}
         </div>
       </div>
     </div>

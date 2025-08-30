@@ -68,9 +68,9 @@ export const ParallaxScroll = ({
         alt={titleFor(i)}
       />
       {/* legibility gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      <div className="absolute overflow-hidden inset-0 bg-gradient-to-t from-black/10 via-black/20 to-transparent" />
       {/* content */}
-      <div className="absolute left-4 right-4 bottom-4 space-y-2">
+              <div className="absolute left-0 right-0 bottom-0 space-y-2 backdrop-blur-sm bg-gray-400/30 rounded-b-4xl p-4">
         <h3 className="text-white text-lg font-semibold drop-shadow-sm">
           {titleFor(i)}
         </h3>

@@ -23,13 +23,11 @@ function hoursFor(i: number) {
 }
 
 function ratingFor(i: number) {
-  // 3.7 → 4.9 spread; deterministic by index
   const vals = [3.7, 3.8, 4.0, 4.2, 4.3, 4.5, 4.6, 4.7, 4.8, 4.9];
   return vals[i % vals.length].toFixed(1);
 }
 
 function gradientFor(i: number) {
-  // Alternate between two different gradients
   const gradients = [
     "bg-gradient-to-r from-pink-500 to-violet-600",
     "bg-gradient-to-r from-[#00B5F1] via-[#00AEEF] to-[#0066B3]"
@@ -45,20 +43,18 @@ export const ParallaxScroll = ({
   className?: string;
 }) => {
   const third = Math.ceil(images.length / 4);
-  // third = Math.ceil(24 / 3) = Math.ceil(8) = 8
 
-  const col1 = images.slice(0, 5); // Images 0-7
-  const col2 = images.slice(5, 10); // Images 8-15
-  const col3 = images.slice(15, 20); // Images 16-23
-  const col4 = images.slice(20, 25); // Images 16-23
+  const col1 = images.slice(0, 5);
+  const col2 = images.slice(5, 10);
+  const col3 = images.slice(15, 20);
+  const col4 = images.slice(20, 25);
 
-  // varied heights for organic masonry
   const heights = ["h-90"];
 
   const Card = ({ src, i }: { src: string; i: number }) => (
     <div
       className={cn(
-        "relative overflow-hidden rounded-4xl shadow-sm",
+        "relative overflow-hidden rounded-4xl shadow-lg transition-all duration-300 ease-out hover:scale-105 cursor-pointer hover:card-hover",
         heights[i % heights.length]
       )}
     >
@@ -67,10 +63,8 @@ export const ParallaxScroll = ({
         className="absolute inset-0 w-full h-full object-cover"
         alt={titleFor(i)}
       />
-      {/* legibility gradient */}
       <div className="absolute overflow-hidden inset-0 bg-gradient-to-t from-black/10 via-black/20 to-transparent" />
-      {/* content */}
-              <div className="absolute left-0 right-0 bottom-0 space-y-2 backdrop-blur-sm bg-gray-400/30 rounded-b-4xl p-4">
+      <div className="absolute left-0 right-0 bottom-0 space-y-2 backdrop-blur-sm bg-gray-400/30 rounded-b-4xl p-4">
         <h3 className="text-white text-lg font-semibold drop-shadow-sm">
           {titleFor(i)}
         </h3>
@@ -83,7 +77,6 @@ export const ParallaxScroll = ({
         >
           <span className="text-xs font-semibold">{hoursFor(i)} Hour Trip</span>
 
-          {/* divider */}
           <span aria-hidden className="mx-2 h-4 w-px bg-white/40" />
 
           <span className="inline-flex items-center gap-1 text-xs font-semibold">
@@ -103,24 +96,58 @@ export const ParallaxScroll = ({
   );
 
   return (
-    <div className={cn("relative w-full  overflow-hidden", className)}>
-      <div className="flex  gap-3 max-w-6xl mx-auto -my-24">
-        {/* Column 1 - starts at normal position */}
-        <div className="grid gap-3 w-[25%] pt-0">
+    <div className={cn("relative w-full overflow-hidden", className)}>
+      <style jsx>{`
+        @keyframes rollUp {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+        
+        @keyframes rollDown {
+          0% { transform: translateY(-50%); }
+          100% { transform: translateY(0); }
+        }
+        
+        .roll-up {
+          animation: rollUp 30s linear infinite;
+        }
+        
+        .roll-down {
+          animation: rollDown 30s linear infinite;
+        }
+        
+        .roll-up:hover,
+        .roll-down:hover {
+          animation-play-state: paused;
+        }
+        
+        .card-hover {
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                      0 0 0 1px rgba(255, 255, 255, 0.1),
+                      0 0 40px rgba(0, 0, 0, 0.3);
+        }
+      `}</style>
+      
+      <div className="flex gap-3 max-w-6xl mx-auto -my-24">
+        <div className="grid gap-3 w-[25%] pt-0 roll-up p-2">
           {col1.map((src, i) => (
             <Card key={`c1-${i}`} src={src} i={i} />
           ))}
-        </div>
-
-        {/* Column 2 - starts offset by half a card height to create brick pattern */}
-        <div className="grid gap-3 w-[25%] transform -translate-y-42">
-          {col2.map((src, i) => (
-            <Card key={`c2-${i}`} src={src} i={i + col1.length} />
+          {col1.map((src, i) => (
+            <Card key={`c1-dup-${i}`} src={src} i={i} />
           ))}
         </div>
 
-        {/* Column 3 - starts at normal position (aligned with column 1) */}
-        <div className="grid gap-3 w-[25%] pt-0">
+        <div className="grid gap-3 w-[25%] transform -translate-y-42 roll-down p-2">
+          {col2.map((src, i) => (
+            <Card key={`c2-${i}`} src={src} i={i + col1.length} />
+          ))}
+          {col2.map((src, i) => (
+            <Card key={`c2-dup-${i}`} src={src} i={i + col1.length} />
+          ))}
+        </div>
+
+        <div className="grid gap-3 w-[25%] pt-0 roll-up p-2">
           {col3.map((src, i) => (
             <Card
               key={`c3-${i}`}
@@ -128,13 +155,26 @@ export const ParallaxScroll = ({
               i={i + col1.length + col2.length}
             />
           ))}
+          {col3.map((src, i) => (
+            <Card
+              key={`c3-dup-${i}`}
+              src={src}
+              i={i + col1.length + col2.length}
+            />
+          ))}
         </div>
 
-        {/* Column 4 - starts offset by half a card height (aligned with column 2) */}
-        <div className="grid gap-3 w-[25%] transform -translate-y-42">
+        <div className="grid gap-3 w-[25%] transform -translate-y-42 roll-down p-2">
           {col4.map((src, i) => (
             <Card
               key={`c4-${i}`}
+              src={src}
+              i={i + col1.length + col2.length + col3.length}
+            />
+          ))}
+          {col4.map((src, i) => (
+            <Card
+              key={`c4-dup-${i}`}
               src={src}
               i={i + col1.length + col2.length + col3.length}
             />
